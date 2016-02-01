@@ -20,6 +20,7 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Project
+        exclude = ('created_by_id',)
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -28,3 +29,4 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Task
+        exclude = ('created_by_id',)

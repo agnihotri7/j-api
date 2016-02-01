@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 
 from myapp.models import Project, Task
 from myapp.serializers import UserRegistrationSerializer, ProjectSerializer, TaskSerializer
+from collegedekho.permissions import IsProjectOwner, IsTaskMemberOwner
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -17,12 +18,13 @@ class ProjectViewSet(viewsets.ModelViewSet):
     model = Project
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated, IsProjectOwner]
     parser_classes = (JSONParser,)
 
     def pre_save(self, obj, created=False):
         if created:
             obj.created_by = self.request.user
+            obj.save()
 
 class TaskViewSet(viewsets.ModelViewSet):
     """
@@ -30,7 +32,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     model = Task
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated, IsTaskMemberOwner]
     parser_classes = (JSONParser,)
 
     def pre_save(self, obj, created=False):
